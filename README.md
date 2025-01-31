@@ -1,2 +1,2 @@
-# Inventory-managment- Still developing
+# Inventory-managment- Still in progress
 Inventory management web app
