@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Store</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <%- include('partials/sidebar', { username: user.username, userid: user.userid }) %> 
+
+    <!-- Main Content -->
+    <div class="content-container1">
+        <% if (typeof successMessage !== 'undefined') { %>
+            <div id="successModal" class="modal">
+                <div class="modal-content">
+                    <p><%= successMessage %></p>
+                    <button class="btn btn-primary" id="modalOkButton">OK</button>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const modal = document.getElementById('successModal');
+                    const okButton = document.getElementById('modalOkButton');
+
+                    // Show modal
+                    modal.style.display = 'flex';
+
+                    // Redirect on OK button click
+                    okButton.addEventListener('click', () => {
+                        window.location.href = '/in';
+                    });
+
+                    document.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter') {
+                            window.location.href = '/in';
+                        }
+                    });
+                    
+                    // Auto-redirect after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = '/in';
+                    }, 3000);
+                });
+            </script>
+        <% } %>
+        <div class="form-container">    
+            <!-- Store Name Input -->
+            <div class="form-row">
+                <div>
+                    <label for="storeName">Store Name</label>
+                    <input type="text" id="storeName" name="storeName" placeholder="Enter Store Name">
+                </div>
+            </div>
+
+            <!-- Add Button -->
+            <div class="form-row form-actions">
+                <button class="btn btn-cancel" type="button" onclick="clearForm()">Cancel</button>
+                <button class="btn btn-add" type="button" onclick="addStore()">Add</button>
+            </div>
+
+            <div class="breakLine">
+                <hr>
+            </div>
+
+            <!-- Table to Display Stores -->
+            <table id="storeTable">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Store Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows dynamically added here -->
+                </tbody>
+            </table>
+
+            <!-- Save Button -->
+            <div class="form-row footer-buttons">
+                <button class="btn btn-cancel" onclick="location.href='/in'">Cancel</button>
+                <form id="saveForm" action="/addstore" method="POST">
+                    <input type="hidden" name="stores" id="storesData">
+                    <input type="hidden" name="userid" id="userid" value="<%= user.userid %>">
+                    
+                    <button class="btn btn-save" type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to clear the store input
+        function clearForm() {
+            document.getElementById('storeName').value = '';
+        }
+
+        function isStoreDuplicate(storeName) {
+            const table = document.getElementById('storeTable').getElementsByTagName('tbody')[0];
+            const rows = Array.from(table.rows);
+
+            // Check if any row already has the same store name
+            return rows.some(row => row.cells[1].textContent.trim().toLowerCase() === storeName.toLowerCase());
+        }
+
+        function deleteRow(button) {
+            const row = button.parentElement.parentElement; // Get the row containing the button
+            const table = row.parentElement; // Get the table body
+
+            // Remove the row from the table
+            table.removeChild(row);
+
+            // Update the row numbers
+            const rows = Array.from(table.rows);
+            rows.forEach((row, index) => {
+                row.cells[0].textContent = index + 1; // Update the row number
+            });
+        }
+
+        // Function to add a store to the table
+        function addStore() {
+            const storeName = document.getElementById('storeName').value;
+
+            if (!storeName.trim()) {
+                alert('Store name cannot be empty.');
+                return;
+            }
+
+            if (isStoreDuplicate(storeName)) {
+                alert('Store name already exists in the table.');
+                return;
+            }
+
+            const table = document.getElementById('storeTable').getElementsByTagName('tbody')[0];
+            const rowCount = table.rows.length;
+
+            // Add a new row
+            const row = table.insertRow();
+            row.innerHTML = `
+                <td>${rowCount + 1}</td>
+                <td>${storeName}</td>
+                <td>
+                    <button class="btn-delete" onclick="deleteRow(this)">X</button>
+                </td> 
+            `;
+
+            clearForm();
+        }
+        // Attach event to save button to pass table data to the hidden input
+        document.getElementById('saveForm').addEventListener('submit', function (event) {
+            const table = document.getElementById('storeTable').getElementsByTagName('tbody')[0];
+            const rows = Array.from(table.rows);
+            const stores = rows.map(row => ({
+            storeName: row.cells[1].textContent.trim()
+        }));
+
+        console.log('Stores being submitted:', stores); // Add debugging log
+
+        // Add JSON data to the hidden input field
+        document.getElementById('storesData').value = JSON.stringify(stores);
+    });
+    </script>
+</body>
+</html>

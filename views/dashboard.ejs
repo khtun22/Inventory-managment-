@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/main.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <%- include('partials/sidebar', { username: user.username, userid: user.userid }) %>
+        
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const ctx = document.getElementById('transactionChart').getContext('2d');
+
+            try {
+                // Fetch transaction data from the backend
+                const response = await fetch('/dashboard/transaction-data');
+                const data = await response.json();
+
+                // Prepare the chart data
+                const labels = data.labels; // Dates
+                const incomingData = labels.map(date => {
+                    const found = data.IN.find(d => d.date === date);
+                    return found ? found.count : 0; // Default to 0 if no data for that date
+                });
+                const outgoingData = labels.map(date => {
+                    const found = data.OUT.find(d => d.date === date);
+                    return found ? found.count : 0;
+                });
+                const transferData = labels.map(date => {
+                    const found = data.TRAN.find(d => d.date === date);
+                    return found ? found.count : 0;
+                });
+
+                // Create the chart
+                new Chart(ctx, {
+                    type: 'line', // Line chart
+                    data: {
+                        labels: labels, // Dates as labels
+                        datasets: [
+                            {
+                                label: 'Incoming',
+                                data: incomingData,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Outgoing',
+                                data: outgoingData,
+                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 1
+                            },
+                            {
+                                label: 'Transfer',
+                                data: transferData,
+                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 1
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return ` ${tooltipItem.raw} transactions`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading chart data:', error);
+                alert('Failed to load chart data');
+            }
+        });
+    </script>
+</body>
+</html>

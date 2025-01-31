@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="d-flex justify-content-center align-items-center vh-100 bg-light">
+        <!-- Wider Form Panel -->
+        <div class="card p-4 shadow" style="width: 600px;">
+            <!-- Alert Message -->
+            <% if (typeof errorMessage !== 'undefined') { %>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <%= errorMessage %>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            <% } %>
+            <!-- Form -->
+            <form action="/register" method="POST">
+                <div class="loginform">
+                    <h1 class="h4 mb-3 text-center">Register</h1>
+
+                    <!-- Username -->
+                    <div class="row mb-3 align-items-center">
+                        <label for="username" class="col-sm-3 col-form-label">Username</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="username" name="username" class="form-control" placeholder="Enter username" required>
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="row mb-3 align-items-center">
+                        <label for="password" class="col-sm-3 col-form-label">Password</label>
+                        <div class="col-sm-9">
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter password" required>
+                        </div>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="row mb-3 align-items-center">
+                        <label for="confirmPassword" class="col-sm-3 col-form-label">Retype Password</label>
+                        <div class="col-sm-9">
+                            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" placeholder="Retype password" required>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="row mb-3 align-items-center">
+                        <label for="email" class="col-sm-3 col-form-label">Email</label>
+                        <div class="col-sm-9">
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Enter email" required>
+                        </div>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="row mb-3 align-items-center">
+                        <label for="phoneno" class="col-sm-3 col-form-label">Phone Number</label>
+                        <div class="col-sm-9">
+                            <input type="text" name="phoneno" class="form-control" placeholder="Phone Number" required>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary w-100">Register</button>
+                    <div class="text-center mt-3">
+                        <a href="/login" class="text-decoration-none">Already have an account? Login</a>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

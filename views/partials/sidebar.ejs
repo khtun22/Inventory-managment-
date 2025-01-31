@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sidebar</title>
+        <!-- Add Font Awesome CDN -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
+<body>
+    <nav class="sidebar">
+        <ul>
+            <li><a href="/dashboard">Home</a></li>
+            <li>
+                <a href="javascript:void(0)" class="expandable">Transaction <span class="arrow">▼</span></a>
+                <ul class="submenu">
+                    <li><a href="/in">In</a></li>
+                    <li><a href="/out">Out</a></li>
+                    <li><a href="/transfer">Transfer</a></li>
+                </ul>
+            </li>
+            <li><a href="/adjustment">Adjustment</a></li>
+            <li><a href="/alert">Alert</a></li>
+            <li>
+                <a href="javascript:void(0)" class="expandable">Edit <span class="arrow">▼</span></a>
+                <ul class="submenu">
+                    <li><a href="/editHistory">History</a></li>
+                    <li><a href="/editName">Name</a></li>
+                </ul>
+            </li>
+            <li><a href="/report">Report</a></li>
+            <li><a href="/profile">Profile</a></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- Moved topbar.ejs content here -->
+    <nav class="top-bar">
+        <span class="username"></span>
+        <div class="icons">
+            <a href="/notification" class="icon-link">
+                <i class="fas fa-envelope notification-icon"></i>
+            </a>
+            <div id="notificationDropdown" style="display: none;">
+                <p>No new notifications</p>
+            </div>
+            <span class="username"><%= username %></span>
+            <a href="/profile" class="icon-link">
+                <i class="fa fa-user profile-icon"></i>
+            </a>
+            
+        </div>
+        <input type="hidden" id="userid" value="<%= userid %>">
+    </nav>
+
+    <script>
+        // Ensure script runs after DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Script loaded and DOM fully parsed.');
+            
+            // Select all expandable links
+            const expandableLinks = document.querySelectorAll('.expandable');
+            console.log('Expandable links found:', expandableLinks);
+
+            expandableLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    const submenu = link.nextElementSibling;
+                    const arrow = link.querySelector('.arrow');
+
+                    // Debugging logs
+                    console.log('Clicked link:', link);
+                    console.log('Submenu:', submenu);
+
+                    if (submenu.style.display === 'block') {
+                        submenu.style.display = 'none'; // Collapse submenu
+                        arrow.textContent = '▼'; // Down arrow
+                    } else {
+                        submenu.style.display = 'block'; // Expand submenu
+                        arrow.textContent = '▲'; // Up arrow
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

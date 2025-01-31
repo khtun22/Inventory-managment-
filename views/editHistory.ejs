@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adjustment</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <%- include('partials/sidebar', { username: user.username, userid: user.userid }) %> 
+
+    <!-- Main Content -->
+    <div class="content-container1">
+        <!-- Radio Buttons -->
+        <div class="filter-container">
+            <label><input type="radio" name="transactionFilter" value="ALL" checked> ALL</label>
+            <label><input type="radio" name="transactionFilter" value="IN"> IN</label>
+            <label><input type="radio" name="transactionFilter" value="OUT"> OUT</label>
+            <label><input type="radio" name="transactionFilter" value="TRAN"> TRANSFER</label>
+        </div>
+
+        <!-- Date Range and Search -->
+        <div class="date-filter">
+            <label for="startDate">Start Date:</label>
+            <input type="date" id="startDate" name="startDate">
+            
+            <label for="endDate">End Date:</label>
+            <input type="date" id="endDate" name="endDate">
+            
+            <button id="searchButton">Search</button>
+        </div>
+
+        <!-- Transaction Table -->
+        <div class="table-container">
+            <table id="transactionTable" class="custom-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Transaction Name</th>
+                        <th>Total Qty</th>
+                        <th>Date</th>
+                        <th>Source Location</th>
+                        <th>Target Location</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // Fetch transactions on page load and search button click
+        async function fetchTransactions() {
+            const filter = document.querySelector('input[name="transactionFilter"]:checked').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+
+            try {
+                const response = await fetch('/editHistory/getTransactions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ filter, startDate, endDate }),
+                });
+
+                const transactions = await response.json();
+
+                // Populate the transaction table
+                const tbody = document.getElementById('transactionTable').querySelector('tbody');
+                tbody.innerHTML = ''; // Clear existing rows
+
+                transactions.forEach(transaction => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${transaction.transactionid}</td>
+                        <td>${transaction.tranname}</td>
+                        <td>${transaction.trantotalqty}</td>
+                        <td>${transaction.trandate}</td>
+                        <td>${transaction.sourceLocation}</td>
+                        <td>${transaction.targetLocation}</td>
+                        <td>
+                            <form method="POST" action="/editHistorydetail" style="display: inline;">
+                                <input type="hidden" name="transactionid" value="${transaction.transactionid}">
+                                <button class="btn btn-add" type="submit">Adjust</button>
+                            </form>
+                        </td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching transactions:', error);
+                alert('Failed to fetch transactions.');
+            }
+        }
+        // Event listeners
+        document.getElementById('searchButton').addEventListener('click', fetchTransactions);
+        document.querySelectorAll('input[name="transactionFilter"]').forEach(radio => {
+            radio.addEventListener('change', fetchTransactions);
+        });
+
+        // Fetch transactions on page load
+        window.onload = fetchTransactions;
+    </script>
+</body>
+</html>

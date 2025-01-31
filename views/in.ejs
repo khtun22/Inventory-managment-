@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incoming Page</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+
+    </head> 
+    <!-- Sidebar -->
+    <%- include('partials/sidebar', { username: user.username, userid: user.userid }) %> 
+    <!-- Main Content -->
+    <div class="content-container">
+        <!-- Buttons Below Top Bar -->
+        
+        <!-- Input Form -->
+        <div class="form-container">
+            <div class="form-row1">
+                <div class="form-item">
+                    <label for="todaydate">Date: <span id="todayDate"></span></label>
+                </div>
+                <div class="form-item">
+                    <label for="transactionid">Transaction No: <%= nextTransactionId %></label>
+                </div>
+                <input type="hidden" id="itemid" value="<%= maxItemId %>">
+            </div>
+            
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    var today = new Date();
+                    var dateString = today.toLocaleDateString();
+                    document.getElementById('todayDate').textContent = dateString;
+                });
+            </script>
+            <div class="breakLine">
+                <hr>
+            </div>
+            <div class="form-row1">
+                <div class="form-item">
+                    <label for="store">Store</label>
+                    <div>
+                        <select id="store" name="store">
+                            <option value="">Select Store</option>
+                            <% stores.forEach(store => { %>
+                                <option value="<%= store.storeid %>"><%= store.storename %></option>
+                            <% }) %>
+                        </select>
+                        <button class="btn btn-store" onclick="location.href='/addstore'">New Store</button>
+                    </div>
+                </div>
+                <div class="form-item">
+                    <label for="category">Category</label>
+                    <div>
+                        <select id="category" name="category">
+                            <option value="">Select Category</option>
+                        </select>
+                        <button class="btn btn-location" onclick="location.href='/addcategory'">New Category</button>
+                    </div>
+                </div>
+                
+            </div>
+            <script>
+                document.getElementById('store').addEventListener('change', async function () {
+                    const storeId = this.value; // Get selected store ID
+                    const categoryDropdown = document.getElementById('category');
+                    
+                    // Clear existing options
+                    categoryDropdown.innerHTML = '<option value="">Select Category</option>';
+            
+                    if (storeId) {
+                        try {
+                            // Fetch categorys from the server
+                            const response = await fetch(`/categorys/${storeId}`);
+                            const categorys = await response.json();
+            
+                            // Populate category dropdown
+                            categorys.forEach(category => {
+                                const option = document.createElement('option');
+                                option.value = category.categoryid;
+                                option.textContent = category.categoryname;
+                                categoryDropdown.appendChild(option);
+                            });
+                        } catch (error) {
+                            console.error('Error fetching categorys:', error);
+                        }
+                    }
+                });
+            </script>
+            
+            <div class="breakLine">
+                <hr>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label for="itemName">Item Name</label>
+                    <input type="text" id="itemName" name="itemName" placeholder="Enter item name">
+                </div>
+                <div>
+                    <label for="quantity">Quantity</label>
+                    <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" min="0" max="10000" oninput="validateNumberInput(this)">
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label for="alertQuantity">Alert Quantity</label>
+                    <input type="number" id="alertQuantity" name="alertQuantity" min="0" max="1000" placeholder="Enter alert quantity" >
+                </div>
+                <div>
+                    <label for="alertCondition">Alert Condition</label>
+                    <select id="alertCondition" name="alertCondition">
+                        <option value="">---</option>
+                        <option value="lt">Less Than</option>
+                        <option value="lte">Less Than or Equal</option>
+                        <option value="gt">Greater Than</option>
+                        <option value="gte">Greater Than or Equal</option>
+                        <option value="eq">Equal</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <label for="expireDate">Expire Date</label>
+                    <input type="date" id="expireDate" name="expireDate">
+                </div>
+                <div>
+                    <label for="alertExpireDate">Days Before Expiry</label>
+                    <input type="number" id="alertExpireDate" name="alertExpireDate"  min="0" max="360" oninput="validateNumberInput(this)">
+                </div>
+            </div>
+            <div class="form-row form-actions">
+                <button class="btn btn-cancel" type="button" onclick="clearForm()">Cancel</button>
+                <button class="btn btn-add" type="button" onclick="addItem()">Add</button>
+            </div>
+            <div class="breakLine">
+                <hr>
+            </div>
+            <table id="itemTable" class="custom-table">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Item Name</th>
+                        <th>Store Name</th>
+                        <th>Category Name</th>
+                        <th>Qty</th>
+                        <th>Alt Qty</th>
+                        <th>Alt Cond</th>
+                        <th>Exp Date</th>
+                        <th>Exp Days</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows dynamically added here -->
+                </tbody>
+            </table>
+            <div class="breakLine">
+                <hr>
+            </div>
+            <div class="form-row2">
+                <label for="TotalQty" class="align-right">Total Quantity: <span id="totalQuantity">0</span></label>
+            </div>
+            <div class="breakLine">
+                <hr>
+            </div>
+            <div class="form-row footer-buttons">
+                <button class="btn btn-cancel" onclick="category.href='/dashboard'">Cancel</button>
+                <button class="btn btn-save" type="submit">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        function clearForm() {
+            document.getElementById('itemName').value = '';
+            document.getElementById('quantity').value = '';
+            document.getElementById('alertQuantity').value = '';
+            document.getElementById('alertCondition').value = '';
+            document.getElementById('expireDate').value = '';
+            document.getElementById('alertExpireDate').value = '';
+        }
+
+        function isDuplicateEntry(storeId, categoryName, itemName, quantity) {
+            const table = document.getElementById('itemTable').getElementsByTagName('tbody')[0];
+            const rows = Array.from(table.rows);
+
+            for (const row of rows) {
+                const existingStoreId = row.cells[2].dataset.storeid;
+                const existingCategoryName = row.cells[3].textContent.trim().toLowerCase();
+                const existingItemName = row.cells[1].textContent.trim().toLowerCase();
+
+                if (existingStoreId === storeId && existingCategoryName === categoryName.toLowerCase() && existingItemName === itemName.toLowerCase()) {
+                    // If item already exists, update quantity
+                    const qtyCell = row.cells[4]; // Quantity column
+                    const currentQty = parseInt(qtyCell.textContent) || 0;
+                    const newQty = currentQty + parseInt(quantity); // Add new quantity
+                    qtyCell.textContent = newQty; // Update the table
+
+                    // Update total quantity
+                    calculateTotalQuantity();
+                    clearForm();
+
+                    return true; // Item found and updated
+                }
+            }
+            return false; // Item not found
+        }
+
+        
+        function validateNumberInput(input) {
+            let value = parseInt(input.value, 10);
+
+            if (isNaN(value) || value < input.min) {
+                input.value = input.min; // Set to min if below limit
+            } else if (value > input.max) {
+                input.value = input.max; // Set to max if exceeded
+            }
+        }
+
+        function calculateTotalQuantity() {
+            const table = document.getElementById('itemTable').getElementsByTagName('tbody')[0];
+            const rows = Array.from(table.rows);
+
+            // Calculate the sum of quantities
+            const totalQuantity = rows.reduce((sum, row) => {
+                const quantity = parseInt(row.cells[4].textContent.trim()) || 0;
+                return sum + quantity;
+            }, 0);
+
+            // Update the total quantity display
+            document.getElementById('totalQuantity').textContent = totalQuantity;
+        }
+
+        function deleteRow(button) {
+            const row = button.parentElement.parentElement; // Get the row containing the button
+            const table = row.parentElement; // Get the table body
+
+            // Remove the row from the table
+            table.removeChild(row);
+
+            // Get the initial itemid from the hidden input
+            const initialItemId = parseInt(document.getElementById('itemid').value) || 0;
+
+            // Update the row numbers and reassign `itemid`s sequentially starting from `initialItemId`
+            const rows = Array.from(table.rows);
+            rows.forEach((row, index) => {
+                // Update the row number
+                row.cells[0].textContent = index + 1;
+
+                // Update the `itemid` (hidden input)
+                const hiddenItemId = row.querySelector('input[name="itemid"]');
+                hiddenItemId.value = initialItemId + index +1; // Start from `initialItemId` and increment sequentially
+            });
+            
+
+            // Recalculate the total quantity
+            calculateTotalQuantity();
+            if (table.rows.length === 0) {
+                document.getElementById('store').disabled = false;
+                document.getElementById('category').disabled = false;
+            }
+        }
+
+        function addItem() {
+            const table = document.getElementById('itemTable').getElementsByTagName('tbody')[0];
+
+            const storeSelect = document.getElementById('store');
+            const storeId = storeSelect.value; // Get the selected storeid
+            const storeName = storeSelect.options[storeSelect.selectedIndex]?.text || ''; // Get the selected storename
+
+            const categorySelect = document.getElementById('category');
+            const categoryId = categorySelect.value; // Get the selected categoryid
+            const categoryName = categorySelect.options[categorySelect.selectedIndex]?.text || ''; // Get the selected category name
+
+            const itemName = document.getElementById('itemName').value.trim();
+            const quantity = document.getElementById('quantity').value.trim();
+            const alertQuantity = document.getElementById('alertQuantity').value.trim();
+            const alertCondition = document.getElementById('alertCondition').value;
+            const expireDate = document.getElementById('expireDate').value;
+            const alertExpireDate = document.getElementById('alertExpireDate').value.trim();
+
+            const itemidInput = document.getElementById('itemid');
+            const initialItemId = parseInt(itemidInput.value) || 0; // Get the starting itemid
+
+            // Validation
+            if (!storeId || !categoryId || !itemName || !quantity) {
+                alert('Please fill out all required fields.');
+                return;
+            }
+
+            // Check for duplicate entries
+            if (isDuplicateEntry(storeId, categoryName, itemName, quantity)) {
+                return; // If the item already exists, the quantity was updated, so exit function
+            }
+
+            if (alertQuantity >= quantity) {
+                alert('Alert Quantity cannot be greater than or equal Quantity.');
+                alertQuantity.value = ""; // Reset to default `---`
+                return;
+            }
+
+            // **Validation: Alert Condition & Alert Quantity**
+            if (alertCondition  && !alertQuantity) {
+                alert('Please enter Alert Quantity if Alert Condition is selected.');
+                alertCondition.value = ""; // Reset to default `---`
+                return;
+            }
+
+            // **Validation: Alert Expire Date & Expiry Date**
+            if (alertExpireDate && !expireDate ) {
+                alert('Please select an Expiry Date if you enter Alert Expiry Days.');
+                alertExpireDate.value = ""; // Reset Alert Expire Days
+                return;
+            }
+
+            
+
+            // Calculate the new itemid for this row
+            const rowCount = table.rows.length;
+            const newItemId = initialItemId + rowCount +1;
+
+            // Add a new row to the table
+            const row = table.insertRow();
+
+            row.innerHTML = `
+                <td>${rowCount + 1}</td>
+                <td>${itemName}</td>
+                <td data-storeid="${storeId}">${storeName}</td> <!-- Store ID hidden but stored in data attribute -->
+                <td data-categoryid="${categoryId}">${categoryName}</td> <!-- category ID hidden in a data attribute -->
+                <td>${quantity}</td>
+                <td>${alertQuantity}</td>
+                <td>${alertCondition}</td>
+                <td>${expireDate}</td>
+                <td>${alertExpireDate}</td>
+                <td>
+                    <input type="hidden" name="itemid" value="${newItemId}">
+                    <button class="btn-delete" onclick="deleteRow(this)">X</button>
+                </td> 
+            `;
+
+            calculateTotalQuantity();
+            if (table.rows.length === 1) {
+                document.getElementById('store').disabled = true;
+                document.getElementById('category').disabled = true;
+            }
+            // Clear form fields after adding the row
+            clearForm();
+        }
+
+        document.querySelector('.btn-save').addEventListener('click', async function () {
+            const table = document.getElementById('itemTable').getElementsByTagName('tbody')[0];
+            const rows = Array.from(table.rows);
+
+            if (rows.length === 0) {
+                alert('No items to save.');
+                return;
+            }
+
+            // Collect transaction data
+            const transactionId = parseInt(document.querySelector('label[for="transactionid"]').textContent.split(': ')[1]);
+            const tranName = 'IN';
+            const tranDate = new Date().toISOString().slice(0, 19).replace('T', ' '); // Current date and time
+            const totalQty = parseInt(document.getElementById('totalQuantity').textContent);
+
+            // Collect items data
+            const items = rows.map(row => ({
+                itemId: parseInt(row.querySelector('input[name="itemid"]').value), // Hidden itemid
+                itemName: row.cells[1].textContent.trim(),
+                itemQty: parseInt(row.cells[4].textContent.trim()),
+                alertQty: parseInt(row.cells[5].textContent.trim()) ,
+                alertCondition: row.cells[6].textContent.trim(),
+                expDate: row.cells[7].textContent.trim(),
+                alertDate: parseInt(row.cells[8].textContent.trim()) ,
+                categoryId: parseInt(row.cells[3].dataset.categoryid), // Hidden categoryid
+            }));
+
+            try {
+                // Send data to the backend
+                const response = await fetch('/in', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        transactionId,
+                        tranName,
+                        tranDate,
+                        totalQty,
+                        items,
+                    }),
+                });
+
+                if (response.ok) {
+                    alert('Transaction saved successfully.');
+                    window.location.reload(); // Reload the page to reset the form
+                } else {
+                    const errorText = await response.text();
+                    alert(`Failed to save transaction: ${errorText}`);
+                }
+            } catch (error) {
+                console.error('Error saving transaction:', error);
+                alert('An error occurred while saving the transaction.');
+            }
+        });
+        
+    </script>
+</body>
+</html>

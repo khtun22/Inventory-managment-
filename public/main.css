@@ -1,0 +1,649 @@
+/* General Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    display: flex; /* Enables flexbox layout */
+    justify-content: center; /* Horizontally centers the content */
+    align-items: center; /* Vertically centers the content */
+    height: 100vh; /* Sets the body height to the viewport height */
+}
+
+/* Form Container Styling */
+.loginform {
+    width: 300px;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.loginform h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.loginform input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.loginform button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.loginform button:hover {
+    background-color: #0056b3;
+}
+
+.loginform a {
+    display: block;
+    margin-top: 10px;
+    color: #007bff;
+    text-decoration: none;
+}
+
+.loginform a:hover {
+    text-decoration: underline;
+}
+
+/* Dashboard Styling */
+.dashboard-container {
+    display: flex;
+}
+
+/* Sidebar Styling */
+.sidebar {
+    position: fixed; /* Sidebar stays fixed on the left */
+    top: 0;
+    left: 0;
+    height: 100vh; /* Full height */
+    width: 130px; /* Adjusted width to reduce size */
+    background: #61A7E8;
+    color: #fff;
+    padding: 20px 10px; /* Adjusted padding for a compact look */
+    overflow-y: auto; /* Scrollable if content overflows */
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    color: #fff;
+    text-decoration: none;
+    display: flex;
+    justify-content: space-between; /* Space out text and arrow */
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer; /* Show pointer cursor for all links */
+}
+
+.sidebar ul li a i {
+    font-size: 16px; /* Ensure icon size is consistent */
+}
+
+.sidebar ul li a:hover {
+    background-color: #507eb6; /* Slightly darker blue for hover effect */
+}
+
+.sidebar ul li ul {
+    margin-left: 20px;
+}
+
+.sidebar ul li ul.submenu {
+    display: none; /* Hide submenus by default */
+    margin-left: 20px; /* Indent submenu items */
+}
+
+.sidebar ul li ul.submenu li {
+    margin: 5px 0;
+}
+
+.submenu {
+    display: none; /* Hide submenus by default */
+    margin-left: 20px; /* Indent submenu items */
+    list-style: none;
+    padding-left: 0;
+}
+
+.submenu li {
+    margin: 5px 0;
+}
+
+.arrow {
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+/* Main Content Styling */
+.main-content {
+    margin-left: 220px; /* Match sidebar width */
+    padding: 20px;
+    width: calc(100% - 220px); /* Adjust width to fit next to the sidebar */
+    box-sizing: border-box;
+}
+
+.main-content h1 {
+    color: #61A7E8;
+}
+
+/* Top Bar Styling */
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 150px; /* Matches the sidebar width */
+    width: calc(100% - 150px); /* Adjusts to occupy the remaining space */
+    background-color: #343a40;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensures it stays on top */
+}
+
+.top-bar .username {
+    font-size: 16px;
+    font-weight: bold;
+    padding-right: 10px;
+}
+.top-bar .icons {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Add spacing between icons */
+}
+
+.top-bar .profile-icon {
+    font-size: 20px;
+    cursor: pointer;
+}
+.top-bar .icon-link {
+    color: white;
+    text-decoration: none;
+}
+.top-bar .notification-icon {
+    font-size: 20px;
+    cursor: pointer;
+    padding-right: 10px;
+}
+.top-bar .profile-icon {
+    font-size: 20px;
+    cursor: pointer;
+    margin-right: 30px;
+}
+
+
+
+/* Button Styling */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin: 5px;
+    width: 150px; /* Set a fixed width for all buttons */
+}
+
+.btn-primary, .btn-store, .btn-location, .btn-add, .btn-save {
+    background-color: #61A7E8;
+    color: white;
+}
+
+.btn-primary:hover, .btn-store:hover, .btn-location:hover, .btn-add:hover, .btn-save:hover {
+    background-color: #4a8ac1;
+}
+
+/* Cancel Button */
+.btn-cancel {
+    background-color: gray;
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: darkgray;
+}
+
+.btn-delete {
+    background-color: #ff4d4d; /* Red background for the delete button */
+    color: white; /* White text color */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 5px 10px; /* Padding for the button */
+    font-size: 10px; /* Font size for the text */
+    cursor: pointer; /* Show pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+.btn-delete:hover {
+    background-color: #ff0000; /* Darker red on hover */
+}
+
+.btn-delete:active {
+    background-color: #cc0000; /* Even darker red when clicked */
+    transform: scale(0.95); /* Slightly shrink the button when clicked */
+}
+
+.buttons-container {
+    margin-top: 60px;
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}   
+
+/* Form Styling */
+.form-container {
+    margin-top: 20px; /* Push below top bar */
+    padding: 20px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    
+}
+.form-row1 {
+    display: flex;
+    margin-bottom: 15px;
+    justify-content: space-between;
+    
+}
+
+.form-row2 {
+    display: flex;
+    align-items: right;
+    margin-bottom: 15px;
+    text-align: right;
+    display: block;
+    font-weight: bold;
+    
+}
+.form-row3 {
+    display: flex;
+    margin-bottom: 15px;
+    justify-content: space-between;
+    
+}
+.form-item {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.form-item:last-child {
+    margin-right: 0;
+}
+
+.form-row1 label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+    width: 150px;
+}
+.form-row1 select {
+    width: calc(50% - 10px);
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-row1 button {
+    margin-left: 10px;
+}
+.form-row button {
+    margin-left: 10px;
+}
+
+.form-row label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: inline-block;
+    width: 150px;
+}
+
+.form-row3 label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: inline-block;
+    width: 164px;
+}
+.form-row3 select {
+    width: calc(50% - 10px);
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.form-row3 input {
+    width: calc(50% - 10px);
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.form-row3 input:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+} 
+.form-row select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.form-row3 select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+
+.form-row input, .form-row select {
+    width: calc(50% - 10px);
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+.form-row div {
+    flex: 1;
+    margin-right: 10px;
+}
+.form-row div:last-child {
+    margin-right: 0;
+}
+
+.form-actions, .footer-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Table Styling */
+.table-container {
+    margin-top: 20px;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    text-align: center;
+    padding: 10px;
+}
+
+table th {
+    background-color: #f4f4f4;
+}
+
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1000;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 300px;
+}
+
+.modal-content p {
+    margin-bottom: 20px;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    background-color: #0056b3;
+}
+
+/* Main Layout Styling */
+.content-container {
+    margin-left: 150px; /* Matches the sidebar width */
+    padding: 20px;
+    display: flex;
+    height: calc(100vh - 50px);
+    width: calc(85% ); /* Adjusts to occupy the remaining space */
+    box-sizing: border-box;
+    flex-direction: column;
+}  
+
+.content-container1 {
+    margin-left: 150px; /* Matches the sidebar width */
+    padding: 20px;
+    display: flex;
+    height: calc(100vh - 50px);
+    box-sizing: border-box;
+    flex-direction: column;
+} 
+
+.label1 {
+    display: flex;
+    font-weight: bold;
+    margin-bottom: 5px;
+    margin-left: 39%;
+    display: block;
+    width: 150px;
+    font-size: 20px;
+    text-align: center;
+}
+
+.breakLine hr {
+    border: none;
+    border-top: 0.7px solid black; /* Black color and 2px thickness */
+    padding-top: 10px;
+    padding-bottom: 5px;
+    margin: 0;
+    margin-left: -20px;
+    margin-right: -20px;
+}
+
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px; /* Adjust text size */
+}
+
+.custom-table th, .custom-table td {
+    padding: 10px;  
+    text-align: left;
+    white-space: nowrap;
+    border: 0.5px solid rgb(83, 83, 83);
+}
+.custom-table td .outgoing-qty {
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    width: 100%; /* Make it fill the entire cell */
+    max-width: 100px; /* Set a reasonable max width */
+}
+
+.custom-table th {
+    background-color: #d4d4d4;
+    font-weight: bold;
+}
+
+.custom-table tr:nth-child(even) {
+    background-color: #efefefb6;
+}
+
+.custom-table tr:nth-child(odd) {
+    background-color: #ffffff;
+}
+
+.custom-table th:nth-child(1), .custom-table td:nth-child(1) {
+    width: 5%; /* Adjust column size */
+}
+
+.custom-table th:nth-child(2), .custom-table td:nth-child(2) {
+    width: 15%; /* Adjust column size */
+}
+
+.custom-table th:nth-child(3), .custom-table td:nth-child(3) {
+    width: 15%; /* Adjust column size */
+}
+
+.custom-table th:nth-child(4), .custom-table td:nth-child(4) {
+    width: 15%; /* Adjust column size */
+}
+.custom-table th:nth-child(5), .custom-table td:nth-child(5) {
+    width: 10%; /* Adjust column size */
+}
+.custom-table th:nth-child(6), .custom-table td:nth-child(6) {
+    width: 10%; /* Adjust column size */
+}
+.custom-table th:nth-child(7), .custom-table td:nth-child(7) {
+    width: 10%; /* Adjust column size */
+}
+.custom-table th:nth-child(8), .custom-table td:nth-child(8) {
+    width: 10%; /* Adjust column size */
+}
+.custom-table th:nth-child(9), .custom-table td:nth-child(9) {
+    width: 5%; /* Adjust column size */
+}
+.custom-table th:nth-child(10), .custom-table td:nth-child(10) {
+    width: 5%; /* Adjust column size */
+}
+
+.filter-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.filter-container label {
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.date-filter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.date-filter label {
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.date-filter input {
+    padding: 5px 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+#searchButton {
+    padding: 5px 15px;
+    font-size: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#searchButton:hover {
+    background-color: #0056b3;
+}
+
+.outgoing-qty {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* Highlight the field when focused */
+.outgoing-qty:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Disable input field when quantity is zero */
+.outgoing-qty:disabled {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+
+/* Add responsiveness */
+@media (max-width: 768px) {
+    .outgoing-qty {
+        width: 60px;
+        font-size: 12px;
+    }
+}

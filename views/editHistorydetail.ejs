@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adjustment Detail</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <%- include('partials/sidebar', { username: user.username, userid: user.userid }) %> 
+
+    <!-- Main Content -->
+    <div class="content-container1">
+        <div class="form-container">
+            <label for="transactionid">Transaction No: <%= transaction.transactionid %></label>
+        </div> 
+    </div>    
+</body>
+</html>

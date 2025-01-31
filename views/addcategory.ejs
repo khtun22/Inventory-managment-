@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add category</title>
+    <link rel="stylesheet" href="/main.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <%- include('partials/sidebar', { username: user.username, userid: user.userid }) %> 
+
+    <!-- Main Content -->
+    <div class="content-container1">
+        <% if (typeof successMessage !== 'undefined') { %>
+            <div id="successModal" class="modal">
+                <div class="modal-content">
+                    <p><%= successMessage %></p>
+                    <button class="btn btn-primary" id="modalOkButton">OK</button>
+                </div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const modal = document.getElementById('successModal');
+                    const okButton = document.getElementById('modalOkButton');
+
+                    // Show modal
+                    modal.style.display = 'flex';
+
+                    // Redirect on OK button click
+                    okButton.addEventListener('click', () => {
+                        window.location.href = '/in';
+                    });
+
+                    document.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter') {
+                            window.location.href = '/in';
+                        }
+                    });
+                    
+                    // Auto-redirect after 3 seconds
+                    setTimeout(() => {
+                        window.location.href = '/in';
+                    }, 3000);
+                });
+            </script>
+        <% } %>
+        <div class="form-container">    
+            <!-- Store Name Select -->
+            <div class="form-row">
+                <div>
+                    <label for="store">Store</label>
+                    <select id="store" name="store">
+                        <option value="">Select Store</option>
+                        <% stores.forEach(store => { %>
+                            <option value="<%= store.storeid %>"><%= store.storename %></option>
+                        <% }) %>
+                    </select>
+                </div>
+            </div>
+
+            <!-- category Name Input -->
+            <div class="form-row">
+                <div>
+                    <label for="categoryName">Category Name</label>
+                    <input type="text" id="categoryName" name="categoryName" placeholder="Enter category Name">
+                </div>
+            </div>
+
+            <!-- Add Button -->
+            <div class="form-row form-actions">
+                <button class="btn btn-cancel" type="button" onclick="clearForm()">Cancel</button>
+                <button class="btn btn-add" type="button" onclick="addcategory()">Add</button>
+            </div>
+
+            <div class="breakLine">
+                <hr>
+            </div>
+
+            <!-- Table to Display categorys -->
+            <table id="categoryTable">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Store Name</th>
+                        <th>Category Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows dynamically added here -->
+                </tbody>
+            </table>
+
+            <!-- Save Button -->
+            <div class="form-row footer-buttons">
+                <button class="btn btn-cancel" onclick="location.href='/in'">Cancel</button>
+                <form id="saveForm" action="/addcategory" method="POST">
+                    <input type="hidden" name="userid" id="userid" value="<%= user.userid %>">
+                    <input type="hidden" name="categorys" id="categorysData">
+                    
+                    <button class="btn btn-save" type="submit">Save</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to clear the category input
+        function clearForm() {
+            document.getElementById('categoryName').value = '';
+        }
+
+        function iscategoryDuplicate(storeId, categoryName) {
+            const table = document.getElementById('categoryTable').getElementsByTagName('tbody')[0];
+            const rows = Array.from(table.rows);
+
+            // Check if any row already has the same storeId and categoryName
+            return rows.some(row =>
+                row.cells[1].dataset.storeid === storeId &&
+                row.cells[2].textContent.trim().toLowerCase() === categoryName.toLowerCase()
+            );
+        }
+        function deleteRow(button) {
+            const row = button.parentElement.parentElement; // Get the row containing the button
+            const table = row.parentElement; // Get the table body
+
+            // Remove the row from the table
+            table.removeChild(row);
+
+            // Update the row numbers
+            const rows = Array.from(table.rows);
+            rows.forEach((row, index) => {
+                row.cells[0].textContent = index + 1; // Update the row number
+            });
+        }
+
+        // Function to add a category to the table
+        function addcategory() {
+            const categoryName = document.getElementById('categoryName').value;
+            const storeSelect = document.getElementById('store');
+            const storeId = storeSelect.value; // Get the selected storeid
+            const storeName = storeSelect.options[storeSelect.selectedIndex].text; // Get the selected storename
+
+            if (!storeId || !categoryName.trim()) {
+                alert('Store and category name cannot be empty.');
+                return;
+            }
+            if (iscategoryDuplicate(storeId, categoryName)) {
+                alert('This Store and category already exists in the table.');
+                return;
+            }
+
+            const table = document.getElementById('categoryTable').getElementsByTagName('tbody')[0];
+            const rowCount = table.rows.length;
+
+            // Add a new row
+            const row = table.insertRow();
+            row.innerHTML = `
+                <td>${rowCount + 1}</td>
+                <td data-storeid="${storeId}">${storeName}</td> <!-- Store ID hidden but stored in data attribute -->
+                <td>${categoryName}</td>
+                <td>
+                    <button class="btn-delete" onclick="deleteRow(this)">X</button>
+                </td> 
+            `;
+
+            clearForm();
+        }
+
+        // Attach event to save button to pass table data to the hidden input
+        document.getElementById('saveForm').addEventListener('submit', function (event) {
+            const table = document.getElementById('categoryTable').getElementsByTagName('tbody')[0];
+            const rows = Array.from(table.rows);
+            const categorys = rows.map(row => ({
+                storeId: row.cells[1].dataset.storeid, // Get storeid from data attribute
+                categoryName: row.cells[2].textContent.trim()
+            }));
+            console.log('categorys being submitted:', categorys);
+            // Add JSON data to the hidden input field
+            document.getElementById('categorysData').value = JSON.stringify(categorys);
+        });
+    </script>
+</body>
+</html>
